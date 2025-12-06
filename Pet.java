@@ -1,6 +1,6 @@
 /*
 * Name: Holly Hebert
-* Date: November 30th, 2025
+* Date: December 6, 2025
 * Week: 3 - Class Implementation
 * Purpose: Abstract base class representing a general pet profile.
 * Demonstrates abstraction, inheritance, and polymorphism (via getProfile()).
