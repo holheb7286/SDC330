@@ -1,6 +1,14 @@
-/*
-* Dog class extending Pet. Demonstrates inheritance and polymorphism.
-*/
+/*******************************************************************
+ * Name: Holly Hebert
+ * Date: December 10, 2025
+ * Assignment: SDC330 Week 5 – Final Project
+ * Class: Dog
+ *
+ * Description:
+ * Represents a Dog subclass of Pet.
+ * Demonstrates inheritance and polymorphism.
+ * Adds training level as a unique attribute.
+ *******************************************************************/
 
 public class Dog extends Pet {
 
@@ -12,8 +20,13 @@ public class Dog extends Pet {
         this.trainingLevel = trainingLevel;
     }
 
-    public String getTrainingLevel() { return trainingLevel; }
-    public void setTrainingLevel(String trainingLevel) { this.trainingLevel = trainingLevel; }
+    public String getTrainingLevel() {
+        return trainingLevel;
+    }
+
+    public void setTrainingLevel(String trainingLevel) {
+        this.trainingLevel = trainingLevel;
+    }
 
     @Override
     public String getProfile() {

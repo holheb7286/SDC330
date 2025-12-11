@@ -1,3 +1,15 @@
+/*******************************************************************
+ * Name: Holly Hebert
+ * Date: December 10, 2025
+ * Assignment: SDC330 Week 5 – Final Project
+ * Class: Prescription
+ *
+ * Description:
+ * Represents a prescription entry for a specific pet, containing 
+ * medication name, dosage, frequency, and prescribing vet.
+ * Supports full object construction and formatted display.
+ *******************************************************************/
+
 public class Prescription {
 
     private int prescriptionId;
@@ -77,10 +89,13 @@ public class Prescription {
         this.prescribingVet = prescribingVet;
     }
 
+    // Formatted display
     public String getPrescriptionDetails() {
         return "Prescription #" + prescriptionId +
-               "\nPet ID: " + petId + "\nMedication: " + medicationName +
-               "\nDosage: " + dosage + "\nFrequency: " + frequency +
+               "\nPet ID: " + petId +
+               "\nMedication: " + medicationName +
+               "\nDosage: " + dosage +
+               "\nFrequency: " + frequency +
                "\nPrescribed By: " + prescribingVet + "\n";
     }
 }

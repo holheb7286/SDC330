@@ -1,13 +1,14 @@
 /*******************************************************************
  * Name: Holly Hebert
  * Date: December 5, 2025
- * Assignment: SDC330 Week 4 – Animal Health Checker Database Helper
+ * Assignment: SDC330 Week 5 – Final Project
  * Class: DatabaseHelper
  *
  * Description:
- * Handles SQLite connection and schema creation for the Pet Health Checker app.
- * Ensures tables for pets, appointments, medical records, and emergency contacts
- * are present. Provides connection access to other classes like PetManager.
+ * Handles SQLite connection and schema creation for the Animal
+ * Health Checker app. Ensures tables for pets, appointments,
+ * medical records, prescriptions, and emergency contacts are
+ * created if they do not already exist.
  *******************************************************************/
 
 import java.sql.Connection;
@@ -24,7 +25,7 @@ public class DatabaseHelper {
         return DriverManager.getConnection(DB_URL);
     }
 
-    // Called once at startup to create tables if they don't exist
+    // Initializes all required tables
     public void initializeDatabase() {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
 
@@ -46,6 +47,7 @@ public class DatabaseHelper {
                     appointment_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     pet_id INTEGER,
                     date TEXT,
+                    time TEXT,
                     reason TEXT,
                     FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
                 );
@@ -71,6 +73,19 @@ public class DatabaseHelper {
                     name TEXT,
                     phone TEXT,
                     relationship TEXT,
+                    FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
+                );
+            """);
+
+            // Prescriptions table
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS prescriptions (
+                    prescription_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    pet_id INTEGER NOT NULL,
+                    medication_name TEXT NOT NULL,
+                    dosage TEXT NOT NULL,
+                    frequency TEXT NOT NULL,
+                    prescribing_vet TEXT NOT NULL,
                     FOREIGN KEY (pet_id) REFERENCES pets(pet_id)
                 );
             """);

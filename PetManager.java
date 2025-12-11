@@ -1,6 +1,6 @@
 /*******************************************************************
  * Name: Holly Hebert
- * Date: December 5, 2025
+ * Date: December 10, 2025
  * Assignment: SDC330 Week 4 – PetManager (with DB support)
  * Class: PetManager
  *
@@ -15,11 +15,11 @@ import java.util.Scanner;
 public class PetManager implements Manageable {
 
     private final DatabaseHelper dbHelper;
-    private final Scanner scanner;   // <- ONE shared scanner
+    private final Scanner scanner;
 
     public PetManager(DatabaseHelper dbHelper) {
         this.dbHelper = dbHelper;
-        this.scanner = new Scanner(System.in);   // ← Never close this
+        this.scanner = new Scanner(System.in);
         dbHelper.initializeDatabase();
     }
 
@@ -109,36 +109,62 @@ public class PetManager implements Manageable {
             System.out.print("Enter Pet ID to update: ");
             int petId = Integer.parseInt(scanner.nextLine());
 
-            System.out.print("New Name: ");
-            String name = scanner.nextLine();
+            // Fetch current data
+            String fetchSql = "SELECT * FROM pets WHERE pet_id = ?;";
+            try (PreparedStatement fetchPs = conn.prepareStatement(fetchSql)) {
+                fetchPs.setInt(1, petId);
+                ResultSet rs = fetchPs.executeQuery();
 
-            System.out.print("New Species: ");
-            String species = scanner.nextLine();
+                if (!rs.next()) {
+                    System.out.println("No pet found with that ID.");
+                    return;
+                }
 
-            System.out.print("New Breed: ");
-            String breed = scanner.nextLine();
+                // Show current values
+                String currentName = rs.getString("name");
+                String currentSpecies = rs.getString("species");
+                String currentBreed = rs.getString("breed");
+                int currentAge = rs.getInt("age");
+                double currentWeight = rs.getDouble("weight");
 
-            System.out.print("New Age: ");
-            int age = Integer.parseInt(scanner.nextLine());
+                // Prompt user for new values
+                System.out.println("\n--- Leave any field blank to keep current value ---");
 
-            System.out.print("New Weight: ");
-            double weight = Double.parseDouble(scanner.nextLine());
+                System.out.print("New Name [" + currentName + "]: ");
+                String name = scanner.nextLine();
+                if (name.isEmpty()) name = currentName;
 
-            String sql = "UPDATE pets SET name = ?, species = ?, breed = ?, age = ?, weight = ? WHERE pet_id = ?;";
+                System.out.print("New Species [" + currentSpecies + "]: ");
+                String species = scanner.nextLine();
+                if (species.isEmpty()) species = currentSpecies;
 
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, name);
-                ps.setString(2, species);
-                ps.setString(3, breed);
-                ps.setInt(4, age);
-                ps.setDouble(5, weight);
-                ps.setInt(6, petId);
+                System.out.print("New Breed [" + currentBreed + "]: ");
+                String breed = scanner.nextLine();
+                if (breed.isEmpty()) breed = currentBreed;
 
-                int rows = ps.executeUpdate();
-                System.out.println(rows > 0 ? "Pet updated." : "No such pet ID.");
+                System.out.print("New Age [" + currentAge + "]: ");
+                String ageInput = scanner.nextLine();
+                int age = ageInput.isEmpty() ? currentAge : Integer.parseInt(ageInput);
+
+                System.out.print("New Weight [" + currentWeight + "]: ");
+                String weightInput = scanner.nextLine();
+                double weight = weightInput.isEmpty() ? currentWeight : Double.parseDouble(weightInput);
+
+                String updateSql = "UPDATE pets SET name = ?, species = ?, breed = ?, age = ?, weight = ? WHERE pet_id = ?;";
+                try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
+                    updatePs.setString(1, name);
+                    updatePs.setString(2, species);
+                    updatePs.setString(3, breed);
+                    updatePs.setInt(4, age);
+                    updatePs.setDouble(5, weight);
+                    updatePs.setInt(6, petId);
+
+                    int rows = updatePs.executeUpdate();
+                    System.out.println(rows > 0 ? "Pet updated successfully." : "Update failed.");
+                }
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | NumberFormatException e) {
             System.err.println("Error updating pet: " + e.getMessage());
         }
     }
@@ -155,7 +181,6 @@ public class PetManager implements Manageable {
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, petId);
-
                 int rows = ps.executeUpdate();
                 System.out.println(rows > 0 ? "Pet deleted." : "No such pet ID.");
             }

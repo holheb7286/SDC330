@@ -1,10 +1,14 @@
-/*
-* Name: Holly Hebert
-* Date: December 6, 2025
-* Week: 3 - Class Implementation
-* Purpose: Abstract base class representing a general pet profile.
-* Demonstrates abstraction, inheritance, and polymorphism (via getProfile()).
-*/
+/*******************************************************************
+ * Name: Holly Hebert
+ * Date: December 6, 2025
+ * Assignment: SDC330 Week 3 – Class Implementation
+ * Class: Pet (Abstract)
+ *
+ * Description:
+ * Abstract base class representing a general pet profile.
+ * Demonstrates abstraction, inheritance, and polymorphism
+ * (via getProfile()). Used by Dog and Cat subclasses.
+ *******************************************************************/
 
 public abstract class Pet {
 
@@ -17,7 +21,9 @@ public abstract class Pet {
     protected String dietaryNotes;
     protected String behaviorNotes;
 
-    // Constructor
+    /**
+     * Constructs a Pet object with all attributes.
+     */
     public Pet(int petId, String name, String species, String breed, int age, double weight,
                String dietaryNotes, String behaviorNotes) {
         this.petId = petId;
@@ -30,7 +36,7 @@ public abstract class Pet {
         this.behaviorNotes = behaviorNotes;
     }
 
-    // Getters and setters (Required by Week 2 Design)
+    // Getters and setters
     public int getPetId() { return petId; }
     public void setPetId(int petId) { this.petId = petId; }
 
@@ -55,7 +61,10 @@ public abstract class Pet {
     public String getBehaviorNotes() { return behaviorNotes; }
     public void setBehaviorNotes(String behaviorNotes) { this.behaviorNotes = behaviorNotes; }
 
-    // Polymorphic behavior — each species can override profile formatting
+    /**
+     * Returns a formatted profile string specific to the pet type.
+     * Must be implemented by subclasses (Dog, Cat).
+     */
     public abstract String getProfile();
 
     @Override
